@@ -1,114 +1,64 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;1
-public class Dictionary {
-    private static final Map<String, String> dictionary = new HashMap<>();
+import java.util.Scanner;
+public class BinarySearchDictionary {
+    static String[] words = {
+            "algorithm",
+            "array",
+            "binary",
+            "class",
+            "compiler",
+            "data",
+            "function",
+            "hashmap",
+            "inheritance",
+            "java",
+            "loop",
+            "object",
+            "stack",
+            "string",
+            "variable"
+    };
+    static String[] meanings = {
+            "A step-by-step procedure for solving a problem.",
+            "A collection of elements stored at contiguous memory locations.",
+            "A number system using base 2.",
+            "A blueprint for creating objects.",
+            "A program that translates source code into executable code.",
+            "Facts or information collected for analysis.",
+            "A block of code that performs a specific task.",
+            "A data structure that stores key-value pairs.",
+            "A mechanism where one class acquires properties of another.",
+            "A high-level, object-oriented programming language.",
+            "A control structure for repeating tasks.",
+            "An instance of a class.",
+            "A linear data structure following LIFO principle.",
+            "A sequence of characters.",
+            "A named memory location used to store data."
+    };
+    public static int binarySearch(String[] arr, String key) {
+        int low = 0, high = arr.length - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int compare = key.compareTo(arr[mid]);
+            if (compare == 0)
+                return mid;
+            else if (compare > 0)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        return -1; // not found
+    }
     public static void main(String[] args) {
-        populateSampleWords();
-        try (Scanner sc = new Scanner(System.in)) {
-            while (true) {
-                printMenu();
-                String choice = sc.nextLine().trim();
-                switch (choice) {
-                    case "1":
-                        searchWord(sc);
-                        break;
-                    case "2":
-                        addWord(sc);
-                        break;
-                    case "3":
-                        deleteWord(sc);
-                        break;
-                    case "4":
-                        viewAll();
-                        break;
-                    case "5":
-                        System.out.println("Exiting. Goodbye!");
-                        return;
-                    default:
-                        System.out.println("Invalid choice. Please enter 1-5.");
-                }
-                System.out.println(); // blank line for readability
-            }
-        }
-    }
-    private static void populateSampleWords() {
-        // store keys in lowercase for case-insensitive lookup
-        dictionary.put("java", "A high-level, class-based, object-oriented programming language.");
-        dictionary.put("array", "A collection of elements identified by index.");
-        dictionary.put("hashmap", "A data structure that stores key-value pairs with fast lookup.");
-        dictionary.put("recursion", "A technique where a method calls itself.");
-        dictionary.put("stack", "A data structure that follows LIFO (last in, first out).");
-        dictionary.put("queue", "A data structure that follows FIFO (first in, first out).");
-        dictionary.put("polymorphism", "Ability of objects to take many forms in OOP.");
-    }
-
-    private static void printMenu() {
-        System.out.println("=== Dictionary App ===");
-        System.out.println("1. Search Word");
-        System.out.println("2. Add Word");
-        System.out.println("3. Delete Word");
-        System.out.println("4. View All Words");
-        System.out.println("5. Exit");
-        System.out.print("Enter choice (1-5): ");
-    }
-    private static void searchWord(Scanner sc) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=== DICTIONARY SEARCH (Binary Search) ===");
         System.out.print("Enter word to search: ");
-        String word = sc.nextLine().trim();
-        if (word.isEmpty()) {
-            System.out.println("Please enter a valid word.");
-            return;
-        }
-        String meaning = dictionary.get(word.toLowerCase());
-        if (meaning != null) {
-            System.out.println("Meaning: " + meaning);
+        String key = sc.next().toLowerCase();
+        int index = binarySearch(words, key);
+        if (index != -1) {
+            System.out.println("Meaning: " + meanings[index]);
         } else {
-            System.out.println("Word not found.");
+            System.out.println("Word not found in dictionary.");
         }
-    }
-    private static void addWord(Scanner sc) {
-        System.out.print("Enter word to add: ");
-        String word = sc.nextLine().trim();
-        if (word.isEmpty()) {
-            System.out.println("Please enter a valid word.");
-            return;
-        }
-        System.out.print("Enter meaning: ");
-        String meaning = sc.nextLine().trim();
-        if (meaning.isEmpty()) {
-            System.out.println("Please enter a valid meaning.");
-            return;
-        }
-        dictionary.put(word.toLowerCase(), meaning);
-        System.out.println("Word added/updated successfully.");
-    }
-    private static void deleteWord(Scanner sc) {
-        System.out.print("Enter word to delete: ");
-        String word = sc.nextLine().trim();
-        if (word.isEmpty()) {
-            System.out.println("Please enter a valid word.");
-            return;
-        }
-        String removed = dictionary.remove(word.toLowerCase());
-        if (removed != null) {
-            System.out.println("Deleted successfully.");
-        } else {
-            System.out.println("Word not found.");
-        }
-    }
-    private static void viewAll() {
-        if (dictionary.isEmpty()) {
-            System.out.println("Dictionary is empty.");
-            return;
-        }
-        System.out.println("All words in dictionary:");
-        for (Map.Entry<String, String> e : dictionary.entrySet()) {
-            System.out.println(capitalize(e.getKey()) + " : " + e.getValue());
-        }
-    }
-    private static String capitalize(String s) {
-        if (s == null || s.isEmpty()) return s;
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        sc.close();
     }
 }
-
